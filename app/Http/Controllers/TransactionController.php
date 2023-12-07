@@ -12,7 +12,8 @@ class TransactionController extends Controller
     public function index()
     {
         $userId = auth()->id();
-        $transaction = Transaction::where('user_id', $userId)->get();
+        $transaction = Transaction::where('user_id', $userId)->paginate(10);
+        logger($transaction);
 
         return Inertia::render('Transactions/Transactions', ['transactions' => $transaction]);
     }

@@ -1,10 +1,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Link, Head } from '@inertiajs/react';
 import "../../../css/styles.css";
 import { useState } from 'react';
 
 export default function Transactions({ auth, transactions }) {
+    console.log(transactions);
     const [sortAscending, setSortAscending] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const transactionArray = transactions.data || [];
+
     const toggleSortOrder = () => {
         setSortAscending(!sortAscending); 
     
@@ -14,6 +18,10 @@ export default function Transactions({ auth, transactions }) {
     
             return sortAscending ? dateA - dateB : dateB - dateA;
         });
+    };
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
     };
     return (
         <AuthenticatedLayout auth={auth} user={auth.user}>
@@ -40,7 +48,7 @@ export default function Transactions({ auth, transactions }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {transactions.map((transaction, index) => (
+                        {transactions.data.map((transaction, index) => (
                             <tr key={index} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {transaction.transaction_date}
@@ -61,6 +69,23 @@ export default function Transactions({ auth, transactions }) {
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="pagination-container">
+                <nav aria-label="Page navigation">
+                    <ul className='pagination'>
+                        {transactions.links.map((link, index) => (
+                            <li key={index} className={`page-item ${link.active ? 'active' : ''}`}>
+                                <Link 
+                                    as="button"
+                                    onClick={() => paginate(link.label)}
+                                    href={link.url ? link.url : '!#'}
+                                    dangerouslySetInnerHTML={{__html: link.label}}
+                                    className='page-link'
+                                />
+                            </li>
+                         ))}
+                    </ul>
+                </nav>
             </div>
         </AuthenticatedLayout>
     );
