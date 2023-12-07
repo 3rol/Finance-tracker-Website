@@ -1,25 +1,23 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import HeaderLayout from '@/Layouts/HeaderLayout';
-import HomeLayout from '@/Layouts/HomeLayout';
-import SidebarLayout from '@/Layouts/SidebarLayout';
-import { Head } from '@inertiajs/react';
 import React from "react";
 import { MdOutlineAttachMoney, MdOutlineSavings } from "react-icons/md";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { GrMoney } from 'react-icons/gr';
 
-export default function Dashboard({ auth, balance }) {
-        
-        return (
-            <AuthenticatedLayout auth={auth} user={auth.user}>
-            <h2>Hello, {auth.user.name}</h2>   
+export default function HomeLayout({user}) {
+    
+    return (
+        <main>
+            <div className='main-title'>
+                <h3>DASHBOARD</h3>
+            </div>
+
             <div className='main-cards'>
                 <div className='card'>
                     <div className='card-inner'>
                         <h3>Current Balance</h3>
                         <MdOutlineAttachMoney className='card_icon'/>
                     </div>
-                    <h1>$ {balance}</h1>
+                    <h1>300</h1>
                 </div>
                 <div className='card'>
                     <div className='card-inner'>
@@ -40,12 +38,12 @@ export default function Dashboard({ auth, balance }) {
                     </div>
                 </div>
             </div>
+         
+
             
-
-            </AuthenticatedLayout>
-        );
-
-        
+        </main>
+    )
 
 
 }
+
