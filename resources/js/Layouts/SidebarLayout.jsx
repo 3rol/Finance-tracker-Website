@@ -4,6 +4,7 @@ import
 import {RiBillFill} from 'react-icons/ri' 
 import { GrMoney } from 'react-icons/gr';
 import { MdOutlineSavings } from "react-icons/md";
+import { InertiaLink } from '@inertiajs/inertia-react';
 export default function SidebarLayout(){
     return (
 
@@ -18,21 +19,21 @@ export default function SidebarLayout(){
 
             <ul className='sidebar-list'>
                 <li className='sidebar-list-item'>
-                    <a href="">
-                        <BsGrid1X2Fill className='icon'/>Dashboard
-                    </a>
+                    <InertiaLink href="/dashboard">
+                        <BsGrid1X2Fill className='icon' />Dashboard
+                    </InertiaLink>
 
                 </li>
                 <li className='sidebar-list-item'>
-                    <a href="">
-                        <RiBillFill className='icon'/>Bills & Payments
-                    </a>
+                    <InertiaLink href="/billsandpayments">
+                        <RiBillFill className='icon' />Bills & Payments
+                    </InertiaLink>
 
                 </li>
                 <li className='sidebar-list-item'>
-                    <a href="">
-                        <GrMoney className='icon'/>Expenses
-                    </a>
+                    <InertiaLink href="/transactions">
+                        <GrMoney className='icon'/>Transactions
+                    </InertiaLink>
 
                 </li>
                 <li className='sidebar-list-item'>

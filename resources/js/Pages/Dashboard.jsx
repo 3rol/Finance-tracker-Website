@@ -8,7 +8,7 @@ import { MdOutlineAttachMoney, MdOutlineSavings } from "react-icons/md";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { GrMoney } from 'react-icons/gr';
 
-export default function Dashboard({ auth, balance }) {
+export default function Dashboard({ auth, balance, totalExpenses, totalIncome }) {
         
         return (
             <AuthenticatedLayout auth={auth} user={auth.user}>
@@ -19,19 +19,22 @@ export default function Dashboard({ auth, balance }) {
                         <h3>Current Balance</h3>
                         <MdOutlineAttachMoney className='card_icon'/>
                     </div>
-                    <h1>$ {balance}</h1>
+                    <h1 className='balance'>$ {balance}</h1>
                 </div>
                 <div className='card'>
                     <div className='card-inner'>
                         <h3>Total Expenses</h3>
                         <GrMoney className='card_icon'/>
+                    
                     </div>
+                    <h1 className='expenses'>$ {totalExpenses}</h1>
                 </div>
                 <div className='card'>
                     <div className='card-inner'>
                         <h3>Total Income</h3>
                         <FaMoneyBillTrendUp className='card_icon'/>
                     </div>
+                    <h1 className='balance'>$ {totalIncome}</h1>
                 </div>
                 <div className='card'>
                     <div className='card-inner'>

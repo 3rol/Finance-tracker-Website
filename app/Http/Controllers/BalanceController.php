@@ -6,25 +6,44 @@ use Illuminate\Http\Request;
 use App\Models\Balance;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Models\Bill;
+use App\Models\Transaction;
+
 
 class BalanceController extends Controller
 {
-    /**
-     * Display the current user's balance.
-     */
+
     public function showDashboard()
     {
         $userId = auth()->id();
+
         $balance = Balance::where('user_id', $userId)->first();
+        $totalExpenses = $this->calculateTotalExpenses($userId);
+        $totalIncome = $this->calculateTotalIncome($userId);
 
         return Inertia::render('Dashboard', [
-            'balance' => $balance ? $balance->available_balance : 0
+            'balance' => $balance ? $balance->available_balance : 0,
+            'totalExpenses' => $totalExpenses,
+            'totalIncome' => $totalIncome,
         ]);
     }
 
-    /**
-     * Add to the user's balance.
-     */
+    private function calculateTotalExpenses($userId)
+    {
+        $totalBills = Bill::where('user_id', $userId)->sum('amount');
+        $totalExpensesTransactions = Transaction::where('user_id', $userId)
+            ->where('type', 'expense')
+            ->sum('amount');
+
+        return $totalBills + $totalExpensesTransactions;
+    }
+    private function calculateTotalIncome($userId)
+    {
+        return Transaction::where('user_id', $userId)
+            ->where('type', 'income')
+            ->sum('amount');
+    }
+
     public function add(Request $request)
     {
         $user = Auth::user();
@@ -35,9 +54,7 @@ class BalanceController extends Controller
         return back()->with('success', 'Balance updated successfully.');
     }
 
-    /**
-     * Subtract from the user's balance.
-     */
+
     public function subtract(Request $request)
     {
         $user = Auth::user();

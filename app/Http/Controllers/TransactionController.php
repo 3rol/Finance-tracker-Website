@@ -7,17 +7,14 @@ use Inertia\Inertia;
 
 class TransactionController extends Controller
 {
-    public function apiIndex()
-    {
-        $transactions = Transaction::all();
-        return response()->json($transactions);
-    }
+
 
     public function index()
     {
+        $userId = auth()->id();
+        $transaction = Transaction::where('user_id', $userId)->get();
 
-        $transactions = Transaction::all();
-        return Inertia::render('Home', ['transactions' => $transactions]);
+        return Inertia::render('Transactions/Transactions', ['transactions' => $transaction]);
     }
 
     public function store(Request $request)
@@ -39,19 +36,18 @@ class TransactionController extends Controller
 
     public function show($id)
     {
-
         $transaction = Transaction::find($id);
 
         if (!$transaction) {
-            return response()->json(['message' => 'Transaction not found'], 404);
+            return redirect()->back()->with('error', 'Transaction not found');
         }
 
-        return response()->json($transaction);
+        return Inertia::render('Transactions/Show', ['transaction' => $transaction]);
     }
+
 
     public function update(Request $request, $id)
     {
-
         $validatedData = $request->validate([
             'amount' => 'sometimes|numeric',
             'type' => 'sometimes|string|max:50',
@@ -60,27 +56,26 @@ class TransactionController extends Controller
             'description' => 'nullable|string',
         ]);
 
-
         $transaction = Transaction::find($id);
 
         if (!$transaction) {
-            return response()->json(['message' => 'Transaction not found'], 404);
+            return redirect()->back()->with('error', 'Transaction not found');
         }
 
         $transaction->update($validatedData);
-        return response()->json($transaction);
+        return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully');
     }
+
 
     public function destroy($id)
     {
-
         $transaction = Transaction::find($id);
 
         if (!$transaction) {
-            return response()->json(['message' => 'Transaction not found'], 404);
+            return redirect()->back()->with('error', 'Transaction not found');
         }
 
         $transaction->delete();
-        return response()->json(['message' => 'Transaction deleted successfully']);
+        return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully');
     }
 }
