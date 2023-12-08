@@ -67,6 +67,9 @@ body {
   .header-link {
     margin-right: 10px; 
 }
+.button-header{
+  margin-right: 20px;
+}
   
   .menu-icon {
     display: none;

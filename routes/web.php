@@ -35,6 +35,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
 
+    Route::post('/add-balance', [BalanceController::class, 'add'])->name('add-balance');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
     Route::get('/billsandpayments', [BillController::class, 'index'])->name('bills');
     Route::get('/dashboard', [BalanceController::class, 'showDashboard'])->name('dashboard');

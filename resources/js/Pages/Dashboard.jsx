@@ -1,17 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import HeaderLayout from '@/Layouts/HeaderLayout';
-import HomeLayout from '@/Layouts/HomeLayout';
-import SidebarLayout from '@/Layouts/SidebarLayout';
-import { Head } from '@inertiajs/react';
-import React from "react";
 import { MdOutlineAttachMoney, MdOutlineSavings } from "react-icons/md";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { GrMoney } from 'react-icons/gr';
+import React from "react";
 
 export default function Dashboard({ auth, balance, totalExpenses, totalIncome }) {
-        
-        return (
-            <AuthenticatedLayout auth={auth} user={auth.user}>
+    return (
+        <AuthenticatedLayout auth={auth} user={auth.user}>
             <h2>Hello, {auth.user.name}</h2>   
             <div className='main-cards'>
                 <div className='card'>
@@ -25,7 +20,6 @@ export default function Dashboard({ auth, balance, totalExpenses, totalIncome })
                     <div className='card-inner'>
                         <h3>Total Expenses</h3>
                         <GrMoney className='card_icon'/>
-                    
                     </div>
                     <h1 className='expenses'>$ {totalExpenses}</h1>
                 </div>
@@ -43,12 +37,6 @@ export default function Dashboard({ auth, balance, totalExpenses, totalIncome })
                     </div>
                 </div>
             </div>
-            
-
-            </AuthenticatedLayout>
-        );
-
-        
-
-
+        </AuthenticatedLayout>
+    );
 }

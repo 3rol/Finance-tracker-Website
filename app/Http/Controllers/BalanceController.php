@@ -46,14 +46,27 @@ class BalanceController extends Controller
 
     public function add(Request $request)
     {
+        $request->validate([
+            'available_balance' => 'required|numeric|min:0',
+        ]);
+
         $user = Auth::user();
-        $balance = Balance::where('user_id', $user->id)->first();
-        $balance->amount += $request->amount;
-        $balance->save();
+        $balance = Balance::firstOrCreate(
+            ['user_id' => $user->id],
+            ['available_balance' => 0]
+        );
 
-        return back()->with('success', 'Balance updated successfully.');
+        try {
+            $balance->available_balance += $request->available_balance;
+            $balance->save();
+        } catch (\Exception $e) {
+
+            \Log::error("Error updating balance: " . $e->getMessage()); //samo u slucaju da mogu vidjet
+            return back()->withErrors('Error updating balance.');
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Balance updated successfully.');
     }
-
 
     public function subtract(Request $request)
     {
