@@ -35,6 +35,7 @@ Route::get('/', function () {
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::post('/billsandpayments/store', [BillController::class, 'store'])->name('bills.store');
     Route::get('/savingsgoals', [SavingsGoalController::class, 'index'])->name('savings');
     Route::post('/add-balance', [BalanceController::class, 'add'])->name('add-balance');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');

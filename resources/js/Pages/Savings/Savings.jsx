@@ -30,13 +30,13 @@ export default function BillsAndPayments({auth, savings}) {
                                     {saving.goal_name}
                                 </td>
                                 <td className="px-6 py-4">
-                                    $ {bill.current_amount}
+                                    $ {saving.current_amount}
                                 </td>
                                 <td className="px-6 py-4">
-                                    $ {bill.target_amount}
+                                    $ {saving.target_amount}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {bill.target_date}
+                                    {saving.target_date}
                                 </td>
                             </tr>
                         ))}

@@ -18,19 +18,19 @@ class BillController extends Controller
 
     public function store(Request $request)
     {
-
         $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'description' => 'nullable|string',
             'amount' => 'required|numeric',
             'due_date' => 'required|date',
-            'frequency' => 'required|string|max:50',
-            'description' => 'nullable|string',
+            'frequency' => 'required|in:monthly,weekly',
         ]);
 
+        Bill::create(array_merge($validatedData, ['user_id' => auth()->id()]));
+        return redirect()->route('bills')->with('success', 'Bill added successfully.');
 
-        $bill = Bill::create($validatedData);
-        return response()->json($bill, 201);
     }
+
+
 
     public function show($id)
     {
@@ -59,7 +59,7 @@ class BillController extends Controller
         }
 
         $bill->update($validatedData);
-        return redirect()->route('bill.show', $bill->id)->with('success', 'Bill updated successfully.');
+        return redirect()->route('bills', $bill->id)->with('success', 'Bill updated successfully.');
     }
 
     public function destroy($id)
