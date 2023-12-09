@@ -37,9 +37,9 @@ export default function SidebarLayout(){
 
                 </li>
                 <li className='sidebar-list-item'>
-                    <a href="">
+                    <InertiaLink href="/savingsgoals">
                         <MdOutlineSavings className='icon'/>Savings Goals
-                    </a>
+                    </InertiaLink>
 
                 </li>
                 <li className='sidebar-list-item'>

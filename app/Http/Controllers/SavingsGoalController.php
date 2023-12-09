@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\SavingsGoal;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SavingsGoalController extends Controller
 {
-    public function __invoke(Request $request)
+    public function index()
     {
+        $userId = auth()->id();
+        $savings = SavingsGoal::where('user_id', $userId)->get();
 
-        $savingsGoals = SavingsGoal::all();
-        return response()->json($savingsGoals);
+        return Inertia::render('Savings/Savings', ['savings' => $savings]);
     }
 
     public function store(Request $request)
@@ -39,7 +41,7 @@ class SavingsGoalController extends Controller
             return response()->json(['message' => 'Savings Goal not found'], 404);
         }
 
-        return response()->json($savingsGoal);
+        // return response()->json($savingsGoal);
     }
 
     public function update(Request $request, $id)
@@ -60,7 +62,7 @@ class SavingsGoalController extends Controller
         }
 
         $savingsGoal->update($validatedData);
-        return response()->json($savingsGoal);
+        // return response()->json($savingsGoal);
     }
 
     public function destroy($id)
@@ -73,6 +75,6 @@ class SavingsGoalController extends Controller
         }
 
         $savingsGoal->delete();
-        return response()->json(['message' => 'Savings Goal deleted successfully']);
+        // return response()->json(['message' => 'Savings Goal deleted successfully']);
     }
 }

@@ -288,5 +288,27 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px; 
+  margin-top: 20px;
+}
+.pagination {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+}
+
+.pagination .page-item {
+  margin: 0 5px; 
+}
+
+.pagination .page-link {
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  color: #337ab7;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #337ab7;
+  color: white;
 }

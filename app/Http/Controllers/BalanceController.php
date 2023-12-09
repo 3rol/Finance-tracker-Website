@@ -61,11 +61,11 @@ class BalanceController extends Controller
             $balance->save();
         } catch (\Exception $e) {
 
-            \Log::error("Error updating balance: " . $e->getMessage()); //samo u slucaju da mogu vidjet
-            return back()->withErrors('Error updating balance.');
+            \Log::error("Error updating balance: " . $e->getMessage());
+
         }
 
-        return redirect()->route('dashboard')->with('success', 'Balance updated successfully.');
+
     }
 
     public function subtract(Request $request)
@@ -75,6 +75,6 @@ class BalanceController extends Controller
         $balance->amount -= $request->amount;
         $balance->save();
 
-        return back()->with('success', 'Balance updated successfully.');
+
     }
 }

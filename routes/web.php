@@ -3,6 +3,7 @@
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SavingsGoalController;
 use App\Http\Controllers\TransactionController;
 use App\Models\Transaction;
 use Illuminate\Foundation\Application;
@@ -34,7 +35,7 @@ Route::get('/', function () {
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-
+    Route::get('/savingsgoals', [SavingsGoalController::class, 'index'])->name('savings');
     Route::post('/add-balance', [BalanceController::class, 'add'])->name('add-balance');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
     Route::get('/billsandpayments', [BillController::class, 'index'])->name('bills');
