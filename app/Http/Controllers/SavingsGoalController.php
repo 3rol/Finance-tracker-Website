@@ -18,18 +18,15 @@ class SavingsGoalController extends Controller
 
     public function store(Request $request)
     {
-
         $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
             'goal_name' => 'required|string|max:100',
             'target_amount' => 'required|numeric',
             'current_amount' => 'numeric',
             'target_date' => 'required|date',
         ]);
 
-
-        $savingsGoal = SavingsGoal::create($validatedData);
-        return response()->json($savingsGoal, 201);
+        SavingsGoal::create(array_merge($validatedData, ['user_id' => auth()->id()]));
+        return redirect()->route('savings')->with('success', 'Savings Goal added successfully.');
     }
 
     public function show($id)

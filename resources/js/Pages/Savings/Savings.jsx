@@ -1,10 +1,26 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Inertia } from '@inertiajs/inertia';
 import "../../../css/styles.css";
+import AddSavingsModal from '@/Components/AddSavingsModal';
+import React, { useState } from 'react';
 
 export default function BillsAndPayments({auth, savings}) {
+    const [showModal, setShowModal] = useState(false);
+
+    const handleAddSavingsGoal = (savingsGoalData) => {
+        Inertia.post('/savingsgoals/store', savingsGoalData, {
+            onSuccess: () => setShowModal(false),
+        });
+    };
     return (
         <AuthenticatedLayout auth={auth} user={auth.user}>
+            <button onClick={() => setShowModal(true)}>Add Savings Goal</button>
+            {showModal && (
+                <AddSavingsModal
+                    onClose={() => setShowModal(false)}
+                    onSubmit={handleAddSavingsGoal}
+                />
+            )}
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
