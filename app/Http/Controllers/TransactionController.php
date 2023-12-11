@@ -63,6 +63,13 @@ class TransactionController extends Controller
 
     public function update(Request $request, $id)
     {
+        // \Log::info("Updating transaction with ID: $id", $request->all());
+
+        $transaction = Transaction::find($id);
+        if (!$transaction) {
+            return redirect()->back()->with('error', 'Transaction not found');
+        }
+
         $validatedData = $request->validate([
             'amount' => 'sometimes|numeric',
             'type' => 'sometimes|string|max:50',
@@ -71,20 +78,39 @@ class TransactionController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $transaction = Transaction::find($id);
-
-        if (!$transaction) {
-            return redirect()->back()->with('error', 'Transaction not found');
-        }
+        $oldAmount = $transaction->amount;
+        $oldType = $transaction->type;
 
         $transaction->update($validatedData);
-        return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully');
+
+        if ($validatedData['amount'] != $oldAmount || $validatedData['type'] != $oldType) {
+            $balance = Balance::where('user_id', auth()->id())->firstOrFail();
+
+            if ($oldType === 'Income') {
+                $balance->available_balance -= $oldAmount;
+            } elseif ($oldType === 'Expense') {
+                $balance->available_balance += $oldAmount;
+            }
+
+            if ($validatedData['type'] === 'Income') {
+                $balance->available_balance += $validatedData['amount'];
+            } elseif ($validatedData['type'] === 'Expense') {
+                $balance->available_balance -= $validatedData['amount'];
+            }
+
+            $balance->save();
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Transaction updated successfully.');
     }
+
+
+
 
 
     public function destroy($id)
     {
-        \Log::info("Deleting transaction with ID: $id");
+        // \Log::info("Deleting transaction with ID: $id");
 
 
         $transaction = Transaction::find($id);

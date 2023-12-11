@@ -4,14 +4,16 @@ import { Inertia } from '@inertiajs/inertia';
 import "../../../css/styles.css";
 import { useState } from 'react';
 import AddTransactionModal from '@/Components/AddTransactionModal';
-import { confirmDialog } from 'primereact/confirmdialog';
-import route from 'ziggy-js';
+import EditTransactionModal from '@/Components/EditTransactionModal';
+
 
 export default function Transactions({ auth, transactions }) {
     const [sortAscending, setSortAscending] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const transactionArray = transactions.data || [];
     const [showModal, setShowModal] = useState(false);
+    const [editModalVisible, setEditModalVisible] = useState(false);
+    const [selectedTransaction, setSelectedTransaction] = useState(null);
 
     const handleAddTransaction = (transactionData) => {
         Inertia.post('/transactions/store', transactionData, {
@@ -21,29 +23,19 @@ export default function Transactions({ auth, transactions }) {
 
     const handleDeleteTransaction = (transaction_id) => {
         if (window.confirm('Are you sure you want to delete this transaction?')) {
-            Inertia.delete(`/transactions/delete/${transaction_id}`, {
-                preserveState: false, // This will cause the page to fully reload after the request
-                onSuccess: () => {
-                    console.log('Transaction deleted successfully');
-                    // Optionally, add logic here to update the UI or state
-                },
-                onError: (errors) => {
-                    console.error('Error deleting transaction:', errors);
-                }
-            });
+            Inertia.delete(`/transactions/delete/${transaction_id}`)
         }
     };
+    const handleEdit = (transaction) => {
+        setSelectedTransaction(transaction);
+        setEditModalVisible(true);
+    };
+    const handleUpdateTransaction = (editData, transactionId) => {
+        console.log(`Updating transaction with ID: ${transactionId}`, editData);
+        Inertia.put(`/transactions/update/${transactionId}`, editData)
+            
+    };
     
-    
-    
-    
-    
-    
-   
-    
-    
-    
-
 
     const toggleSortOrder = () => {
         setSortAscending(!sortAscending); 
@@ -61,6 +53,13 @@ export default function Transactions({ auth, transactions }) {
     };
     return (
         <AuthenticatedLayout auth={auth} user={auth.user}>
+            {editModalVisible && selectedTransaction && (
+        <EditTransactionModal
+        transaction={selectedTransaction}
+        onClose={() => setEditModalVisible(false)}
+        onSubmit={handleUpdateTransaction}
+        />
+)}
               <button onClick={() => setShowModal(true)}>Add Transaction</button>
             {showModal && (
                 <AddTransactionModal
@@ -107,7 +106,8 @@ export default function Transactions({ auth, transactions }) {
                                     {transaction.type === 'Income' ? `+${transaction.amount}` : `-${transaction.amount}`}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                <button onClick={() => handleEdit(transaction)}
+                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
                                     <button 
                                         onClick={() => handleDeleteTransaction(transaction.transaction_id)}
                                         className="font-medium text-red-600 dark:text-red-500 hover:underline"
