@@ -4,7 +4,7 @@ import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { GrMoney } from 'react-icons/gr';
 import React from "react";
 
-export default function Dashboard({ auth, balance, totalExpenses, totalIncome }) {
+export default function Dashboard({ auth, balance, totalExpenses, totalIncome, totalSavings }) {
     return (
         <AuthenticatedLayout auth={auth} user={auth.user}>
             <h2>Hello, {auth.user.name}</h2>   
@@ -35,6 +35,7 @@ export default function Dashboard({ auth, balance, totalExpenses, totalIncome })
                         <h3>Total Savings</h3>
                         <MdOutlineSavings className='card_icon'/>
                     </div>
+                    <h1 className='balance'>$ {balance}/$ {totalSavings}</h1>
                 </div>
             </div>
         </AuthenticatedLayout>

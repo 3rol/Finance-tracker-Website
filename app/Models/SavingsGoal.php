@@ -10,6 +10,6 @@ class SavingsGoal extends Model
     use HasFactory;
 
     protected $table = "savings_goals";
-
+    protected $primaryKey = 'goal_id';
     protected $fillable = ['user_id', 'goal_name', 'target_amount', 'current_amount', 'target_date'];
 }

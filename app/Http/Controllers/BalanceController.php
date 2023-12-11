@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SavingsGoal;
 use Illuminate\Http\Request;
 use App\Models\Balance;
 use Illuminate\Support\Facades\Auth;
@@ -20,11 +21,13 @@ class BalanceController extends Controller
         $balance = Balance::where('user_id', $userId)->first();
         $totalExpenses = $this->calculateTotalExpenses($userId);
         $totalIncome = $this->calculateTotalIncome($userId);
+        $totalSavings = SavingsGoal::where('user_id', $userId)->sum('target_amount');
 
         return Inertia::render('Dashboard', [
             'balance' => $balance ? $balance->available_balance : 0,
             'totalExpenses' => $totalExpenses,
             'totalIncome' => $totalIncome,
+            'totalSavings' => $totalSavings,
         ]);
     }
 

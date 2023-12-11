@@ -35,7 +35,8 @@ Route::get('/', function () {
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-
+    Route::put('/savingsgoals/update/{id}', [SavingsGoalController::class, 'update'])->name('savingsgoals.update');
+    Route::delete('/savingsgoals/delete/{id}', [SavingsGoalController::class, 'destroy'])->name('savingsgoals.delete');
     Route::delete('/transactions/delete/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
     Route::put('/transactions/update/{id}', [TransactionController::class, 'update'])->name('transactions.update');
     Route::post('/transactions/store', [TransactionController::class, 'store'])->name('transactions.store');

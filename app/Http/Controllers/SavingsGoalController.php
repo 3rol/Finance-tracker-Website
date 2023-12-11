@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\SavingsGoal;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
+use App\Models\Balance;
 
 class SavingsGoalController extends Controller
 {
@@ -13,7 +15,14 @@ class SavingsGoalController extends Controller
         $userId = auth()->id();
         $savings = SavingsGoal::where('user_id', $userId)->get();
 
-        return Inertia::render('Savings/Savings', ['savings' => $savings]);
+
+        $balance = Balance::where('user_id', $userId)->first();
+        $currentBalance = $balance ? $balance->available_balance : 0;
+
+        return Inertia::render('Savings/Savings', [
+            'savings' => $savings,
+            'balance' => $currentBalance,
+        ]);
     }
 
     public function store(Request $request)
@@ -43,7 +52,6 @@ class SavingsGoalController extends Controller
 
     public function update(Request $request, $id)
     {
-
         $validatedData = $request->validate([
             'goal_name' => 'sometimes|string|max:100',
             'target_amount' => 'sometimes|numeric',
@@ -51,27 +59,31 @@ class SavingsGoalController extends Controller
             'target_date' => 'sometimes|date',
         ]);
 
-
         $savingsGoal = SavingsGoal::find($id);
 
         if (!$savingsGoal) {
-            return response()->json(['message' => 'Savings Goal not found'], 404);
+            return redirect()->back()->with('error', 'Savings Goal not found');
         }
 
         $savingsGoal->update($validatedData);
-        // return response()->json($savingsGoal);
+
+        return redirect()->route('savings')->with('success', 'Savings Goal updated successfully.');
     }
+
 
     public function destroy($id)
     {
+        Log::info("Attempting to delete savings goal with ID: $id");
 
         $savingsGoal = SavingsGoal::find($id);
 
         if (!$savingsGoal) {
-            return response()->json(['message' => 'Savings Goal not found'], 404);
+            Log::error("Savings goal not found with ID: $id");
+            return redirect()->back()->with('error', 'Savings Goal not found');
         }
 
         $savingsGoal->delete();
-        // return response()->json(['message' => 'Savings Goal deleted successfully']);
+        return redirect()->route('dashboard')->with('success', 'Savings Goal deleted successfully');
     }
+
 }
