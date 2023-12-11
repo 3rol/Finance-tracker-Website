@@ -95,12 +95,16 @@ export default function Savings({auth, savings, balance}) {
                                 <td className="px-6 py-4">
                                     {saving.target_date}
                                 </td>
-                                <td class="px-6 py-4">
-                                <button onClick={() => handleEdit(saving)}
-                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
-                                <button 
-                                    onClick={() => handleDeleteSavings(saving.goal_id)}
-                                    className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
+                                <td className="px-6 py-4">
+                                    <span className="mr-2">
+                                        <button onClick={() => handleEdit(saving)}
+                                            className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+                                    </span>
+                                    <span>
+                                        <button 
+                                                onClick={() => handleDeleteSavings(saving.goal_id)}
+                                                className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
+                                    </span>
                                 </td>
                             </tr>
                         ))}

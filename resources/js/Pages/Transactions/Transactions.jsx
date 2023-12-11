@@ -106,14 +106,12 @@ export default function Transactions({ auth, transactions }) {
                                     {transaction.type === 'Income' ? `+${transaction.amount}` : `-${transaction.amount}`}
                                 </td>
                                 <td class="px-6 py-4">
-                                <button onClick={() => handleEdit(transaction)}
-                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
-                                    <button 
-                                        onClick={() => handleDeleteTransaction(transaction.transaction_id)}
-                                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                                    >
-                                        Delete
-                                    </button>
+                                    <span className="mr-2">
+                                        <button onClick={() => handleEdit(transaction)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+                                    </span>
+                                    <span>
+                                        <button onClick={() => handleDeleteTransaction(transaction.transaction_id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
+                                    </span>
                                 </td>
                                 
 
