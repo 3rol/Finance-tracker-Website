@@ -13,9 +13,7 @@ class SavingsGoalController extends Controller
     public function index()
     {
         $userId = auth()->id();
-        $savings = SavingsGoal::where('user_id', $userId)->get();
-
-
+        $savings = SavingsGoal::where('user_id', $userId)->paginate(10);
         $balance = Balance::where('user_id', $userId)->first();
         $currentBalance = $balance ? $balance->available_balance : 0;
 

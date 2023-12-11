@@ -42,12 +42,7 @@ export default function SidebarLayout(){
                     </InertiaLink>
 
                 </li>
-                <li className='sidebar-list-item'>
-                    <a href="">
-                        <BsFillGearFill className='icon'/>Settings
-                    </a>
-
-                </li>
+                
                
             </ul>
 

@@ -4,11 +4,13 @@ import "../../../css/styles.css";
 import AddSavingsModal from '@/Components/AddSavingsModal';
 import React, { useState } from 'react';
 import EditSavingsModal from '@/Components/EditSavingsModal';
+import { Link } from '@inertiajs/inertia-react';
 
 export default function Savings({auth, savings, balance}) {
     const [showModal, setShowModal] = useState(false);
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [selectedSavings, setSelectedSavings] = useState(null);
+    const savingsData = savings.data || [];
 
     const handleAddSavingsGoal = (savingsGoalData) => {
         Inertia.post('/savingsgoals/store', savingsGoalData, {
@@ -36,6 +38,9 @@ export default function Savings({auth, savings, balance}) {
             },
         });
     };;
+    const paginate = (pageNumber) => {
+        Inertia.get(`/savingsgoals?page=${pageNumber}`);
+    };
 
     return (
         <AuthenticatedLayout auth={auth} user={auth.user}>
@@ -76,7 +81,7 @@ export default function Savings({auth, savings, balance}) {
                         </tr>
                     </thead>
                     <tbody>
-                        {savings.map((saving, index) => (
+                        {savingsData.map((saving, index) => (
                             <tr key={saving.goal_id} className={`bg-white border-b dark:bg-gray-900 dark:border-gray-700 ${index % 2 === 0 ? 'even:bg-gray-50 even:dark:bg-gray-800' : ''}`}>
                                 <td className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {saving.goal_name}
@@ -101,6 +106,20 @@ export default function Savings({auth, savings, balance}) {
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="pagination-container">
+                <nav aria-label="Page navigation">
+                    <ul className='pagination'>
+                        {savings.links.map((link, index) => (
+                            <li key={index} className={`page-item ${link.active ? 'active' : ''}`}>
+                                <Link as="button" onClick={() => paginate(link.label)}
+                                      href={link.url ? link.url : '!#'}
+                                      dangerouslySetInnerHTML={{ __html: link.label }}
+                                      className='page-link' />
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
             </div>
         </AuthenticatedLayout>
     );
