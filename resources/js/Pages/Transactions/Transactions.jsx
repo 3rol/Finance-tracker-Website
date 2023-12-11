@@ -4,9 +4,10 @@ import { Inertia } from '@inertiajs/inertia';
 import "../../../css/styles.css";
 import { useState } from 'react';
 import AddTransactionModal from '@/Components/AddTransactionModal';
+import { confirmDialog } from 'primereact/confirmdialog';
+import route from 'ziggy-js';
 
 export default function Transactions({ auth, transactions }) {
-    console.log(transactions);
     const [sortAscending, setSortAscending] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const transactionArray = transactions.data || [];
@@ -17,6 +18,32 @@ export default function Transactions({ auth, transactions }) {
             onSuccess: () => setShowModal(false),
         });
     };
+
+    const handleDeleteTransaction = (transaction_id) => {
+        if (window.confirm('Are you sure you want to delete this transaction?')) {
+            Inertia.delete(`/transactions/delete/${transaction_id}`, {
+                preserveState: false, // This will cause the page to fully reload after the request
+                onSuccess: () => {
+                    console.log('Transaction deleted successfully');
+                    // Optionally, add logic here to update the UI or state
+                },
+                onError: (errors) => {
+                    console.error('Error deleting transaction:', errors);
+                }
+            });
+        }
+    };
+    
+    
+    
+    
+    
+    
+   
+    
+    
+    
+
 
     const toggleSortOrder = () => {
         setSortAscending(!sortAscending); 
@@ -58,14 +85,15 @@ export default function Transactions({ auth, transactions }) {
                             <th scope="col" className="px-6 py-3">
                                 Amount
                             </th>
-                            <th scope="col" className="px-6 py-3">
-                                Description
+                            <th scope="col" class="px-6 py-3">
+                                Action
                             </th>
+                            
                         </tr>
                     </thead>
                     <tbody>
-                        {transactions.data.map((transaction, index) => (
-                            <tr key={index} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                        {transactions.data.map((transaction) => (
+                            <tr key={transaction.transaction_id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {transaction.transaction_date}
                                 </th>
@@ -78,9 +106,17 @@ export default function Transactions({ auth, transactions }) {
                                 <td class={`px-6 py-4 ${transaction.type === 'Income' ? 'balance' : 'expenses'}`}>
                                     {transaction.type === 'Income' ? `+${transaction.amount}` : `-${transaction.amount}`}
                                 </td>
-                                <td className="px-6 py-4">
-                                    {transaction.description}
+                                <td class="px-6 py-4">
+                                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                    <button 
+                                        onClick={() => handleDeleteTransaction(transaction.transaction_id)}
+                                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                                    >
+                                        Delete
+                                    </button>
                                 </td>
+                                
+
                             </tr>
                         ))}
                     </tbody>

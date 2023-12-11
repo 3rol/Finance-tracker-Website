@@ -84,13 +84,33 @@ class TransactionController extends Controller
 
     public function destroy($id)
     {
+        \Log::info("Deleting transaction with ID: $id");
+
+
         $transaction = Transaction::find($id);
+
 
         if (!$transaction) {
             return redirect()->back()->with('error', 'Transaction not found');
         }
 
+
+        $balance = Balance::where('user_id', auth()->id())->firstOrFail();
+
+
+        if ($transaction->type === 'Income') {
+            $balance->available_balance -= $transaction->amount;
+        } elseif ($transaction->type === 'Expense') {
+            $balance->available_balance += $transaction->amount;
+        }
+
+
+        $balance->save();
         $transaction->delete();
-        return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully');
+
+
+        return redirect()->route('dashboard')->with('success', 'Transaction deleted successfully');
     }
+
+
 }

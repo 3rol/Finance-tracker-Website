@@ -35,6 +35,9 @@ Route::get('/', function () {
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+
+    Route::delete('/transactions/delete/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
+
     Route::post('/transactions/store', [TransactionController::class, 'store'])->name('transactions.store');
     Route::post('/savingsgoals/store', [SavingsGoalController::class, 'store'])->name('savings.store');
     Route::post('/billsandpayments/store', [BillController::class, 'store'])->name('bills.store');
