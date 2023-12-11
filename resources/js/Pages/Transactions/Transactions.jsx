@@ -1,13 +1,22 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Link, Head } from '@inertiajs/react';
+import { Inertia } from '@inertiajs/inertia';
 import "../../../css/styles.css";
 import { useState } from 'react';
+import AddTransactionModal from '@/Components/AddTransactionModal';
 
 export default function Transactions({ auth, transactions }) {
     console.log(transactions);
     const [sortAscending, setSortAscending] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const transactionArray = transactions.data || [];
+    const [showModal, setShowModal] = useState(false);
+
+    const handleAddTransaction = (transactionData) => {
+        Inertia.post('/transactions/store', transactionData, {
+            onSuccess: () => setShowModal(false),
+        });
+    };
 
     const toggleSortOrder = () => {
         setSortAscending(!sortAscending); 
@@ -25,6 +34,13 @@ export default function Transactions({ auth, transactions }) {
     };
     return (
         <AuthenticatedLayout auth={auth} user={auth.user}>
+              <button onClick={() => setShowModal(true)}>Add Transaction</button>
+            {showModal && (
+                <AddTransactionModal
+                    onClose={() => setShowModal(false)}
+                    onSubmit={handleAddTransaction}
+                />
+            )}
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

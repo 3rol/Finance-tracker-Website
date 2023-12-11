@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Balance;
 
 class TransactionController extends Controller
 {
@@ -20,20 +21,33 @@ class TransactionController extends Controller
 
     public function store(Request $request)
     {
-
         $validatedData = $request->validate([
-            'account_id' => 'required|exists:accounts,account_id',
-            'amount' => 'required|numeric',
-            'type' => 'required|string|max:50',
+            'type' => 'required|string|in:Income,Expense',
             'category' => 'required|string|max:50',
+            'amount' => 'required|numeric',
             'transaction_date' => 'required|date',
             'description' => 'nullable|string',
         ]);
 
+        Transaction::create(array_merge($validatedData, ['user_id' => auth()->id()]));
+        $balance = Balance::firstOrCreate(['user_id' => auth()->id()], ['available_balance' => 0]);
 
-        $transaction = Transaction::create($validatedData);
-        return redirect()->route('transactions.index');
+
+        if ($validatedData['type'] === 'Income') {
+            $balance->available_balance += $validatedData['amount'];
+        } elseif ($validatedData['type'] === 'Expense') {
+            $balance->available_balance -= $validatedData['amount'];
+        }
+
+
+        $balance->save();
+
+        // return Inertia::render('Dashboard', [
+        //     'success' => 'Transaction added successfully.'
+        // ]);
     }
+
+
 
     public function show($id)
     {
