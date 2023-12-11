@@ -11,7 +11,7 @@ class BillController extends Controller
     public function index()
     {
         $userId = auth()->id();
-        $bills = Bill::where('user_id', $userId)->get();
+        $bills = Bill::where('user_id', $userId)->paginate(10);
 
         return Inertia::render('BillsAndPayments/BillsAndPayments', ['bills' => $bills]);
     }
@@ -43,14 +43,12 @@ class BillController extends Controller
 
     public function update(Request $request, $id)
     {
-
         $validatedData = $request->validate([
+            'description' => 'sometimes|string',
             'amount' => 'sometimes|numeric',
             'due_date' => 'sometimes|date',
-            'frequency' => 'sometimes|string|max:50',
-            'description' => 'nullable|string',
+            'frequency' => 'sometimes|in:monthly,weekly',
         ]);
-
 
         $bill = Bill::find($id);
 
@@ -59,8 +57,9 @@ class BillController extends Controller
         }
 
         $bill->update($validatedData);
-        return redirect()->route('bills', $bill->id)->with('success', 'Bill updated successfully.');
+        return redirect()->route('bills')->with('success', 'Bill updated successfully.');
     }
+
 
     public function destroy($id)
     {
@@ -71,7 +70,8 @@ class BillController extends Controller
         }
 
         $bill->delete();
-        return redirect()->route('bill.index')->with('success', 'Bill deleted successfully');
+        return redirect()->route('dashboard')->with('success', 'Bill deleted successfully');
     }
+
 
 }
