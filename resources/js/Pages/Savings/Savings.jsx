@@ -39,8 +39,12 @@ export default function Savings({auth, savings, balance}) {
         });
     };;
     const paginate = (pageNumber) => {
-        Inertia.get(`/savingsgoals?page=${pageNumber}`);
+        if (!isNaN(pageNumber)) {
+            setCurrentPage(pageNumber);
+            Inertia.get(`/savings?page=${pageNumber}`);
+        }
     };
+    
 
     return (
         <AuthenticatedLayout auth={auth} user={auth.user}>
@@ -113,16 +117,19 @@ export default function Savings({auth, savings, balance}) {
             </div>
             <div className="pagination-container">
                 <nav aria-label="Page navigation">
-                    <ul className='pagination'>
-                        {savings.links.map((link, index) => (
-                            <li key={index} className={`page-item ${link.active ? 'active' : ''}`}>
-                                <Link as="button" onClick={() => paginate(link.label)}
-                                      href={link.url ? link.url : '!#'}
-                                      dangerouslySetInnerHTML={{ __html: link.label }}
-                                      className='page-link' />
-                            </li>
-                        ))}
-                    </ul>
+                <ul className='pagination'>
+                    {savings.links.map((link, index) => (
+                        <li key={index} className={`page-item ${link.active ? 'active' : ''}`}>
+                            <Link 
+                                as="button" 
+                                onClick={() => paginate(parseInt(link.label))} 
+                                href={link.url ? link.url : '#'} 
+                                dangerouslySetInnerHTML={{ __html: link.label }} 
+                                className='page-link' />
+                        </li>
+                 ))}
+                </ul>
+
                 </nav>
             </div>
         </AuthenticatedLayout>

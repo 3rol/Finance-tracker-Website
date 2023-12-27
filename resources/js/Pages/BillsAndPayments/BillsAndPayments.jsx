@@ -39,8 +39,12 @@ import { Link } from '@inertiajs/inertia-react';
             }
         };
         const paginate = (pageNumber) => {
-            setCurrentPage(pageNumber);
+            if (!isNaN(pageNumber)) {
+                setCurrentPage(pageNumber);
+                Inertia.get(`/billsandpayments?page=${pageNumber}`);
+            }
         };
+        
         return (
             <AuthenticatedLayout auth={auth} user={auth.user}>
                  <button className='focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800' onClick={() => setShowModal(true)}>Add Bill</button>
@@ -105,16 +109,18 @@ import { Link } from '@inertiajs/inertia-react';
                 </div>
                 <div className="pagination-container">
                 <nav aria-label="Page navigation">
-                    <ul className='pagination'>
-                        {bills.links.map((link, index) => (
-                            <li key={index} className={`page-item ${link.active ? 'active' : ''}`}>
-                                <Link as="button" onClick={() => paginate(link.label)}
-                                      href={link.url ? link.url : '!#'}
-                                      dangerouslySetInnerHTML={{ __html: link.label }}
-                                      className='page-link' />
-                            </li>
-                        ))}
-                    </ul>
+                <ul className='pagination'>
+                    {bills.links.map((link, index) => (
+                        <li key={index} className={`page-item ${link.active ? 'active' : ''}`}>
+                            <Link 
+                                as="button" 
+                                onClick={() => paginate(parseInt(link.label))} 
+                                href={link.url ? link.url : '#'} 
+                                dangerouslySetInnerHTML={{ __html: link.label }} 
+                                className='page-link' />
+                        </li>
+                 ))}
+                </ul>
                 </nav>
             </div>
             </AuthenticatedLayout>

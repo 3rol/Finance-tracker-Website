@@ -49,7 +49,10 @@ export default function Transactions({ auth, transactions }) {
     };
 
     const paginate = (pageNumber) => {
-        setCurrentPage(pageNumber);
+        if (!isNaN(pageNumber)) {
+            setCurrentPage(pageNumber);
+            Inertia.get(`/transactions?page=${pageNumber}`);
+        }
     };
     return (
         <AuthenticatedLayout auth={auth} user={auth.user}>
@@ -124,19 +127,22 @@ export default function Transactions({ auth, transactions }) {
                 <nav aria-label="Page navigation">
                     <ul className='pagination'>
                         {transactions.links.map((link, index) => (
-                            <li key={index} className={`page-item ${link.active ? 'active' : ''}`}>
-                                <Link 
-                                    as="button"
-                                    onClick={() => paginate(link.label)}
-                                    href={link.url ? link.url : '!#'}
-                                    dangerouslySetInnerHTML={{__html: link.label}}
-                                    className='page-link'
-                                />
+                            <li key={index} className={`page-item ${link.active ? 'active' : ''} ${link.url ? '' : 'disabled'}`}>
+                            <Link 
+                        as="button"
+                        onClick={() => link.url && paginate(index)}
+                        href={link.url ? link.url : '#'}
+                        dangerouslySetInnerHTML={{__html: link.label}}
+                        className='page-link'
+                    />
                             </li>
-                         ))}
+                    ))}
                     </ul>
                 </nav>
             </div>
+
+
+
         </AuthenticatedLayout>
     );
 }   
